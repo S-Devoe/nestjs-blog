@@ -1,0 +1,6 @@
+PATCH http://localhost:5050/posts
+Content-Type: application/json
+
+{
+    "id": 6
+}

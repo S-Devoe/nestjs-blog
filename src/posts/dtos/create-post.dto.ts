@@ -8,6 +8,7 @@ import {
   IsString,
   IsUrl,
   Matches,
+  MaxLength,
   MinLength,
   ValidateNested,
 } from 'class-validator';
@@ -25,6 +26,7 @@ export class CreatePostDto {
     description: 'The title of the post',
     example: 'My First Post',
   })
+  @MaxLength(256)
   title: string;
 
   @IsEnum(PostType)
@@ -46,6 +48,7 @@ export class CreatePostDto {
     description: 'The slug of the post',
     example: 'my-first',
   })
+  @MaxLength(256)
   slug: string;
 
   @IsEnum(PostStatus)
@@ -80,6 +83,7 @@ export class CreatePostDto {
     description: 'The featured image of the post',
     example: 'https://example.com/image.jpg',
   })
+  @MaxLength(1024)
   featuredImage?: string;
 
   @IsOptional()

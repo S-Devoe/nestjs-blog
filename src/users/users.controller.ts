@@ -15,10 +15,25 @@ import { PatchUserDto } from './dtos/patch-user.dto';
 import { UsersService } from './users.service';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+/**
+ * Controller to handle user routes
+ */
+
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
+  /**
+   * Constructor to inject UsersService
+   * @param usersService - UsersService instance
+   */
   constructor(private readonly usersService: UsersService) {}
+  /**
+   * Method to get all users
+   * @param getUsersParamsDto - DTO to get users
+   * @param limit - Number of users to get
+   * @param page - Page number
+   * @returns List of users
+   */
   @ApiQuery({
     name: 'limit',
     required: false,
@@ -46,11 +61,21 @@ export class UsersController {
   ) {
     return this.usersService.getUsers(getUsersParamsDto, limit, page);
   }
+  /**
+   * Method to create a user
+   * @param createUserDto
+   * @returns Created user
+   */
   @Post()
   public createUser(@Body() createUserDto: CreateUserDto) {
-    return createUserDto;
+    return this.usersService.createUser(createUserDto);
   }
 
+  /**
+   * Method to patch a user
+   * @param patchUserDto
+   * @returns Patched user
+   */
   @Patch()
   public patchUser(@Body() patchUserDto: PatchUserDto) {
     return patchUserDto;
