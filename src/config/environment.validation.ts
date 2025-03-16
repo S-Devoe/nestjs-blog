@@ -11,6 +11,6 @@ export default Joi.object({
   DATABASE_HOST: Joi.string().required(),
   DATABASE_NAME: Joi.string().required(),
 
-  //   google
+  // google
   GOOGLE_PROFILE_API_KEY: Joi.string().required(),
 });
