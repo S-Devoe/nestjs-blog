@@ -1,0 +1,6 @@
+DELETE http://localhost:5050/tags/1
+Content-Type: application/json
+
+DELETE http://localhost:5050/tags/soft-delete/3
+Content-Type: application/json
+

@@ -1,0 +1,11 @@
+PATCH http://localhost:5050/posts
+Content-Type: application/json
+
+{
+    "id":3,
+    "title":"Typescript 4",
+    "postType":"post",
+    "slug":"new-with-nestxjs-19",
+    "tags":[1,3]
+   
+}

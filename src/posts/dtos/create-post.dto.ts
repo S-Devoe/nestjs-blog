@@ -1,6 +1,7 @@
 import {
   IsArray,
   IsEnum,
+  IsInt,
   IsISO8601,
   IsJSON,
   IsNotEmpty,
@@ -14,7 +15,7 @@ import {
 } from 'class-validator';
 import { PostStatus } from '../enums/post-status.enum';
 import { PostType } from '../enums/post-type.enum';
-import { CreatePostMetaOptionsDto } from './create-post-meta-options.dto';
+import { CreatePostMetaOptionsDto } from '../../meta-options/dtos/create-post-meta-options.dto';
 import { Type } from 'class-transformer';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -96,44 +97,40 @@ export class CreatePostDto {
 
   @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  @MinLength(3, { each: true })
+  @IsInt({ each: true })
+  // @MinLength(3, { each: true })
   @ApiPropertyOptional({
-    description: 'The tags of the post, minimum of 3 characters',
-    example: ['tag1', 'tag2'],
+    description: 'Array of id of tags',
+    example: [1, 2],
   })
-  tags?: string[];
+  tags?: number[];
 
   @IsOptional()
-  @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreatePostMetaOptionsDto)
   @ApiPropertyOptional({
     description: 'The meta options of the post',
-    type: 'array',
-    isArray: true,
     required: false,
+    type: CreatePostMetaOptionsDto,
     items: {
       type: 'object',
       properties: {
-        key: {
-          type: 'string',
-          description: 'The key of the meta option',
-          example: 'author',
-        },
-        value: {
-          type: 'any',
+        metavalue: {
+          type: 'json',
           description: 'The value of the meta option',
-          example: 'John Doe',
+          example: '{ "author": "John Doe" }',
         },
       },
     },
-    example: [
-      {
-        key: 'author',
-        value: 'John Doe',
-      },
-    ],
   })
-  metaOptions?: CreatePostMetaOptionsDto[];
+  metaOptions?: CreatePostMetaOptionsDto | null;
+
+  @IsInt()
+  @IsNotEmpty()
+  @ApiProperty({
+    type: 'integer',
+    required: true,
+    example: 1,
+  })
+  userId: number;
 }

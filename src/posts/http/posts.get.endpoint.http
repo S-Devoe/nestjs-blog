@@ -1,0 +1,2 @@
+GET http://localhost:5050/posts/1234
+Content-Type: application/json

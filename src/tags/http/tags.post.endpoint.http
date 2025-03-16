@@ -1,0 +1,11 @@
+POST http://localhost:5050/tags
+Content-Type: application/json
+
+{
+    "name":"JavaScript-Gov1",
+    "slug":"new-with-nestxjs-gp-1v",
+    "schema": "{\r\n \"@context\": \"https:\/\/schema.org\",\r\n \"@type\":\"Person\"\r\n}",
+    "featuredImageUrl":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsZ8W_3wEcaamswDUWW6J2OoiEKzKzyR8NgA&s",
+    "description":"Go is better"
+    
+}

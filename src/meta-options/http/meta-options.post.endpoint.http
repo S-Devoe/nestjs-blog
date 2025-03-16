@@ -1,0 +1,6 @@
+POST http://localhost:5050/meta-options
+Content-Type: application/json
+
+{
+    "metaValue": "{ \"name\": \"meta-option-1\", \"value\": \"meta-option-1-value\", \"array\": [\"meta-option-1-value-1\", \"meta-option-1-value-2\"] }"
+}

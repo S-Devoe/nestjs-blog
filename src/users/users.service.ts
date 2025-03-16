@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { ConfigType } from '@nestjs/config';
+import userConfig from './config/user.config';
 
 /**
  * Class to connect to Users table in the database and perform CRUD operations
@@ -25,6 +27,9 @@ export class UsersService {
      */
     @Inject(forwardRef(() => AuthService))
     private readonly authService: AuthService,
+
+    @Inject(userConfig.KEY)
+    private readonly userConfiguration: ConfigType<typeof userConfig>,
   ) {}
   public async createUser(createUserDto: CreateUserDto) {
     const existingUser = await this.userRepository.findOne({
@@ -49,6 +54,7 @@ export class UsersService {
     limit: number,
     page: number,
   ) {
+    console.log(this.userConfiguration.googleProfileApiKey);
     return [
       {
         id: '1',
@@ -65,10 +71,7 @@ export class UsersService {
    * @param id
    * @returns
    */
-  public getUserById(id: string) {
-    return {
-      id: id,
-      name: 'John Doe',
-    };
+  public async getUserById(id: number) {
+    return await this.userRepository.findOneBy({ id });
   }
 }

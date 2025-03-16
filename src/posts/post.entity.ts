@@ -3,12 +3,18 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { PostStatus } from './enums/post-status.enum';
-import { CreatePostMetaOptionsDto } from './dtos/create-post-meta-options.dto';
 import { PostType } from './enums/post-type.enum';
+import { MetaOption } from 'src/meta-options/meta-option.entity';
+import { User } from 'src/users/user.entity';
+import { Tag } from 'src/tags/tag.entity';
 
 @Entity()
 export class Post {
@@ -69,8 +75,14 @@ export class Post {
   })
   publishedOn?: Date;
 
-  tags?: string[];
-  metaOptions?: CreatePostMetaOptionsDto[];
+  @OneToOne(() => MetaOption, (metaOption) => metaOption.post, {
+    cascade: true,
+    eager: true,
+  })
+  metaOptions?: MetaOption | null;
+
+  @ManyToOne(() => User, (user) => user.posts)
+  user: User;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -80,4 +92,10 @@ export class Post {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @ManyToMany(() => Tag, (tag) => tag.posts, {
+    eager: true,
+  })
+  @JoinTable()
+  tags?: Tag[];
 }
