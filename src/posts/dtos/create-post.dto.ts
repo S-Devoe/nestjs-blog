@@ -88,12 +88,15 @@ export class CreatePostDto {
   featuredImage?: string;
 
   @IsOptional()
-  @IsISO8601()
+  @IsISO8601({
+    strict: false,
+    strictSeparator: false,
+  })
   @ApiPropertyOptional({
     description: 'The date the post was published',
     example: '2021-09-01T00:00:00.000Z',
   })
-  publishedOn?: Date;
+  publishedOn?: string;
 
   @IsOptional()
   @IsArray()

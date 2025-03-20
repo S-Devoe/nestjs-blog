@@ -1,3 +1,5 @@
 GET http://localhost:5050/users/1234
 ?limit=10
 &page=1
+
+GET http://localhost:5050/users/single-user/1

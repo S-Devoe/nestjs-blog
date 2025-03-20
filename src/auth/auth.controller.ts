@@ -1,5 +1,5 @@
 import { Controller } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/providers/users.service';
 import { AuthService } from './providers/auth.service';
 import { ApiTags } from '@nestjs/swagger';
 

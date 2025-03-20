@@ -1,5 +1,10 @@
-import { Body, Injectable } from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
+import {
+  BadRequestException,
+  Body,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { UsersService } from 'src/users/providers/users.service';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { Repository } from 'typeorm';
 import { Post } from '../post.entity';
@@ -7,6 +12,9 @@ import { MetaOption } from 'src/meta-options/meta-option.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TagsService } from 'src/tags/providers/tags.service';
 import { PatchPostDto } from '../dtos/patch-post.dto';
+import { Tag } from 'src/tags/tag.entity';
+import { GetPostsDto } from '../dtos/get-post.dto';
+import { PaginationProvider } from 'src/common/pagination/providers/pagination.provider';
 
 @Injectable()
 export class PostsService {
@@ -27,6 +35,11 @@ export class PostsService {
      * Inject Tag service
      */
     private readonly tagsService: TagsService,
+
+    /**
+     * Inject PaginationProvider
+     */
+    private readonly paginationProvider: PaginationProvider,
   ) {}
   /**
    * Create new post
@@ -42,30 +55,49 @@ export class PostsService {
     //create the post
     const post = this.postRepository.create({
       ...createPostDto,
-      user: user!,
+      user: user,
       tags: tags,
     });
 
-    //save the post
-    return await this.postRepository.save(post);
+    try {
+      //save the post
+      await this.postRepository.save(post);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error while saving post: ${error}`,
+      );
+    }
+
+    return post;
   }
 
   /**
    * Get all posts
    */
-  public async getPosts(userId: string) {
-    const posts = await this.postRepository.find({
-      relations: {
-        metaOptions: true,
-        user: true,
-        // tags: true, // i decided to use eager loading for this
+  public async getPosts(userId: string, postQuery: GetPostsDto) {
+    const whereCondition = userId ? { user: { id: Number(userId) } } : {};
+
+    const posts = await this.paginationProvider.paginatedQuery(
+      {
+        limit: postQuery.limit,
+        page: postQuery.page,
       },
-    });
+
+      this.postRepository,
+      {
+        relations: {
+          metaOptions: true,
+          user: true,
+        },
+        where: whereCondition,
+      },
+    );
+
     return posts;
   }
 
   public async deletePost(id: number) {
-    const post = await this.postRepository.findOneBy({ id });
+    await this.postRepository.findOneBy({ id });
 
     await this.postRepository.delete(id);
 
@@ -76,15 +108,39 @@ export class PostsService {
   }
 
   public async updatePost(patchPostDto: PatchPostDto) {
+    let tags: Tag[];
+    let posts: Post | null;
     // find the tags
-    const tags = await this.tagsService.findMultipleTags(
-      patchPostDto.tags || [],
-    );
+    try {
+      tags = await this.tagsService.findMultipleTags(patchPostDto.tags || []);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error while checking tags: ${error}`,
+      );
+    }
+
+    /**
+     * Number of tags needs to be equal
+     */
+    if (!tags || tags.length !== patchPostDto?.tags?.length) {
+      throw new BadRequestException(
+        'Some tags were not found, please check your tags id and ensure they are correct',
+      );
+    }
+
     // find the posts
-    const posts = await this.postRepository.findOneBy({ id: patchPostDto.id });
+    try {
+      posts = await this.postRepository.findOneBy({ id: patchPostDto.id });
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Error while checking post; ${error}`,
+      );
+    }
 
     if (!posts) {
-      throw new Error('Post not found');
+      throw new BadRequestException(
+        `Post with id ${patchPostDto.id} not found`,
+      );
     }
 
     // update the properties of the post

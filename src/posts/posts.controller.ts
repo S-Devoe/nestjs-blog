@@ -7,19 +7,25 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './providers/posts.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { PatchPostDto } from './dtos/patch-post.dto';
-
+import { GetPostsDto } from './dtos/get-post.dto';
+import { Paginated } from 'src/common/pagination/interfaces/paginated.interface';
+import { Post as PostEntity } from './post.entity';
 @Controller('posts')
 @ApiTags('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
-  @Get('/{:userId}')
-  public getPosts(@Param('userId') userId: string) {
-    return this.postsService.getPosts(userId);
+  @Get('{/:userId}')
+  public getPosts(
+    @Param('userId') userId: string,
+    @Query() postQuery: GetPostsDto,
+  ): Promise<Paginated<PostEntity>> {
+    return this.postsService.getPosts(userId, postQuery);
   }
 
   @ApiOperation({
@@ -31,6 +37,8 @@ export class PostsController {
   })
   @Post()
   public createPost(@Body() createPostDto: CreatePostDto) {
+    console.log('publishedOn', createPostDto?.publishedOn);
+
     return this.postsService.createPost(createPostDto);
   }
 

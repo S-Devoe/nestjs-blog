@@ -4,6 +4,32 @@ Content-Type: application/json
 {
   "firstName": "John",
   "lastName": "Doe",
-  "email": "email1@email.com",
+  "email": "email2@email.com",
   "password": "Password1@#"
+}
+
+POST http://localhost:5050/users/many
+Content-Type: application/json
+{
+   "users": [
+      {
+      "firstName": "John13",
+      "lastName": "Doe",
+      "email": "email111@email.com",
+      "password": "Password1@#"
+      },
+      {
+      "firstName": "John21",
+      "lastName": "Doe",
+      "email": "email14@email.com",
+      "password": "Password1@#"
+      }, 
+      {
+      "firstName": "John13",
+      "lastName": "Doe",
+      "email": "email130@email.com",
+      "password": "Password1@#"
+      }
+    ]
+
 }

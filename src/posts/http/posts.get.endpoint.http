@@ -1,2 +1,9 @@
-GET http://localhost:5050/posts/1234
+{{
+    const date = new Date();
+    exports.startDate = date.toString();
+    exports.endDate = date.toString();
+}}
+GET http://localhost:5050/posts
+?startDate={{startDate}}&endDate={{endDate}}
+&limit=5&page=1
 Content-Type: application/json

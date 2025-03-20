@@ -4,15 +4,15 @@ Content-Type: application/json
 {
     "title":"What's New DeeVoe?",
     "postType":"post",
-    "slug":"new-with-nestxjs-20",
+    "slug":"new-with-nestxjs-27",
     "status":"draft",
     "content":"test content",
     "schema": "{\r\n \"@context\": \"https:\/\/schema.org\",\r\n \"@type\":\"Person\"\r\n}",
     "featuredImage":"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsZ8W_3wEcaamswDUWW6J2OoiEKzKzyR8NgA&s",
-    "publishedOn":"2024-07-01T00:00:00.000",
     "tags":[1,2,3],
     "metaOptions":{
     "metaValue": "{ \"name\": \"meta-option-1\", \"value\": \"meta-option-1-value\", \"array\": [\"meta-option-1-value-1\", \"meta-option-1-value-2\"] }"
     },
-    "userId":3
+    "userId":3,
+    "publishedOn": "2021-09-01T00:00:00.000Z"
 }
