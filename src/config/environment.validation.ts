@@ -13,4 +13,8 @@ export default Joi.object({
 
   // google
   GOOGLE_PROFILE_API_KEY: Joi.string().required(),
+
+  // jwt
+  JWT_SECRET: Joi.string().required(),
+  JWT_ACCESS_TOKEN_TTL: Joi.string().required(),
 });

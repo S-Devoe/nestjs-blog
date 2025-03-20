@@ -15,6 +15,8 @@ import { ConfigType } from '@nestjs/config';
 import userConfig from '../config/user.config';
 import { UsersCreateManyProvider } from './users-create-many.provider';
 import { CreateManyUsersDto } from '../dtos/create-many-user.dto';
+import { CreateUserProvider } from './create-user.provider';
+import { FindUserByEmailProvider } from './find-user-by-email.provider';
 
 /**
  * Class to connect to Users table in the database and perform CRUD operations
@@ -48,35 +50,20 @@ export class UsersService {
      * Create many users provider
      */
     private readonly usersCreateManyProvider: UsersCreateManyProvider,
+
+    /**
+     *Inject create user provider
+     */
+
+    private readonly createUserProvider: CreateUserProvider,
+
+    /**
+     * Find user by email provider
+     */
+    private readonly findUserByEmailProvider: FindUserByEmailProvider,
   ) {}
   public async createUser(createUserDto: CreateUserDto) {
-    let existingUser: User | null;
-    try {
-      existingUser = await this.userRepository.findOne({
-        where: { email: createUserDto.email },
-      });
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Error while checking user; ${error}`,
-      );
-    }
-
-    if (existingUser) {
-      throw new BadRequestException(
-        'The email address is already in use. Please use a different email',
-      );
-    }
-
-    let newUser = this.userRepository.create(createUserDto);
-    try {
-      newUser = await this.userRepository.save(newUser);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        `Error while saving user: ${error}`,
-      );
-    }
-
-    return newUser;
+    return await this.createUserProvider.createUser(createUserDto);
   }
 
   public async createManyUsers(createUsersDto: CreateManyUsersDto) {
@@ -126,5 +113,9 @@ export class UsersService {
       throw new BadRequestException(`User with id ${id} not found`);
     }
     return user;
+  }
+
+  public async getUserByEmail(email: string) {
+    return await this.findUserByEmailProvider.findUserByEmail(email);
   }
 }
