@@ -3,7 +3,9 @@ import { UsersService } from 'src/users/providers/users.service';
 import { AuthService } from './providers/auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dtos/login.dto';
+import { Public } from 'src/common/decorators/public.decorators';
 
+@Public()
 @Controller('auth')
 @ApiTags('auth')
 export class AuthController {

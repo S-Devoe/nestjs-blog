@@ -3,3 +3,4 @@ GET http://localhost:5050/users/1234
 &page=1
 
 GET http://localhost:5050/users/single-user/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImVtYWlsMjRAZW1haWwuY29tIiwic3ViIjoxOCwiaWF0IjoxNzQyNDk5Mjg2LCJleHAiOjE3NDI1ODU2ODZ9.yBk0WVExFMmyLAD_xLXSXmMSkU8gmQ04DN1utXd2edo
